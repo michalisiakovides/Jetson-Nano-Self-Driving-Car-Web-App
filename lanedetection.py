@@ -156,6 +156,7 @@ class camera_1:
     line_image = display_lines(lane_image,averaged_lines)
 
     combo_image = cv2.addWeighted(lane_image,0.8,line_image,1,1)
+    steeringangle = compute_steering_angle(combo_image,averaged_lines)
     cv2.imshow("out",combo_image)
     cv2.waitKey(3)
 
