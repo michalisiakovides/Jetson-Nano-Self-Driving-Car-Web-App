@@ -9,69 +9,6 @@ from std_msgs.msg import String
 from cv_bridge import CvBridge, CvBridgeError
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Float32
-#from lightdetection import lightdet
-#from signrecognition import signrec
-#from lanedetection import lanedetection
-#from lanedetection import average_slope_intercept
-
-"""
-class camera_1:
-  
-  def __init__(self):
-    self.image_sub = rospy.Subscriber("/camera/image_raw", Image, self.callback)
-
-
-  def callback(self,data):
-    bridge = CvBridge()
-
-    try:
-      image = bridge.imgmsg_to_cv2(data, desired_encoding="bgr8") 
-    except CvBridgeError as e:
-      rospy.logerr(e)
-
-    #print(lightdet(image))
-    #print(signrec(image))
-    lanedetection(image)
-    #cv2.imshow("Cropped",lanedetection(image))
-    #cv2.waitKey(3)
-    
-    msg = Twist()
-    
-    if signrec(image)== "Ahead only":
-      msg.linear.x = 0.0
-      pub.publish(msg)
-      rospy.sleep(5)
-      msg.linear.x = 0.2
-      #pub.publish(msg)
-    
-    if lanedetection(image) == "Go straight":
-      print("Go straight")
-      msg.linear.x = 0.1
-      #pub.publish(msg)
-
-    elif lanedetection(image) == "Turn Left":
-      print("Turn Left")
-      msg.linear.x = 0.1
-      msg.angular.z = 0.4
-      #pub.publish(msg)
-    elif lanedetection(image) == "Turn Right":
-      print("Turn Right")
-      msg.linear.x = 0.1
-      msg.angular.z = -0.4
-      #pub.publish(msg)
-    else:
-      print("No Lines")
-      msg.angular.z = 0.0
-      msg.linear.x = 0.0
-    
-    pub.publish(msg)
-    
-   
-    
-    
-    #pub.publish(msg)
-"""
-
 
 
 lane = None
@@ -140,7 +77,7 @@ while not rospy.is_shutdown():
     if sign == 'End speed + passing limits':
        speed = 0.15
 
-    if lane == "Go straight" or sign == "Ahead only":    #and light=="Green"
+    if lane == "Go straight" or sign == "Ahead only":    
         msg.linear.x = speed
       
         #print("Go straight")
@@ -156,7 +93,7 @@ while not rospy.is_shutdown():
         print(msg.angular.z)
         #pub.publish(msg)
 
-    else:                               #for red light
+    else:                               
         #print("No Lines")
         #print(slope)
         msg.angular.z = 0.0
