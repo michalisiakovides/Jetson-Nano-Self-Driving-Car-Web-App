@@ -14,69 +14,6 @@ from std_msgs.msg import Float32
 
 
 
-
-"""
-def compute_steering_angle(frame, lane_lines):
-  #Find the steering angle based on lane line coordinate
-  #We assume that camera is calibrated to point to dead center
-    
-    if len(lane_lines) == 0:
-      rospy.loginfo('No lane lines detected, do nothing')
-      return -90
-
-    height, width, _ = frame.shape
-    if len(lane_lines) == 1:
-        rospy.logdebug('Only detected one lane line, just follow it. %s' % lane_lines[0])
-        x1 = lane_lines[0][0]
-        x2 = lane_lines[0][2]
-        x_offset = x2 - x1
-    else:
-        left_x2 = lane_lines[0][2]
-        right_x2 = lane_lines[1][2]
-        camera_mid_offset_percent = 0.02 # 0.0 means car pointing to center, -0.03: car is centered to left, +0.03 means car pointing to right
-        mid = int(width / 2 * (1 + camera_mid_offset_percent))
-        x_offset = (left_x2 + right_x2) / 2 - mid
-
-    # find the steering angle, which is angle between navigation direction to end of center line
-    y_offset = int(height / 2)
-
-    angle_to_mid_radian = math.atan(x_offset / y_offset)  # angle (in radian) to center vertical line
-    angle_to_mid_deg = int(angle_to_mid_radian * 180.0 / math.pi)  # angle (in degrees) to center vertical line
-    steering_angle = angle_to_mid_deg + 90  # this is the steering angle needed by picar front wheel
-    rospy.logdebug('new steering angle: %s' % steering_angle)
-    return steering_angle
-
-
-def display_heading_line(frame, steering_angle):
-  heading_image = np.zeros_like(frame)
-  height, width, _ = frame.shape
-
-      # figure out the heading line from steering angle
-      # heading line (x1,y1) is always center bottom of the screen
-      # (x2, y2) requires a bit of trigonometry
-
-      # Note: the steering angle of:
-      # 0-89 degree: turn left
-      # 90 degree: going straight
-      # 91-180 degree: turn right 
-  steering_angle_radian = steering_angle / 180.0 * math.pi
-  x1 = int(width / 2)
-  y1 = height
-  x2 = int(x1 - height / 2 / math.tan(steering_angle_radian))
-  y2 = int(height / 2)+100
-
-  cv2.line(heading_image, (x1, y1), (x2, y2), (0, 0, 255), 5)
-  heading_image = cv2.addWeighted(frame, 0.8, heading_image, 1, 1)
-
-  return heading_image
-"""
-
-
-
-
-
-
-
 def compute_steering_angle(frame, lane_lines):
   msg = String()
   slp = Float32()
@@ -93,21 +30,18 @@ def compute_steering_angle(frame, lane_lines):
             msg = "Turn Left"
             pub.publish(msg)
             pub1.publish(slp)
-            print(slope)
+            #print(slope)
             return msg
           else:
             slp = slope
             msg = "Turn Right"
             pub.publish(msg)
             pub1.publish(slp)
-            print(slope)
+            #print(slope)
             return msg
         except:
-          #slp = "None"
           msg = "None"
           pub.publish(msg)
-          #pub1.publish(slp)
-          print(slope)
           return msg
   
   else:
@@ -128,8 +62,6 @@ def display_lines(image,lines):
     for line in lines:
       x1,y1,x2,y2 = line.reshape(4)
       cv2.line(line_image,(x1,y1),(x2,y2),(255,0,0),10)
-      
-   
   return line_image
 
 def make_coordinates(image,line_parameters):
@@ -155,9 +87,7 @@ def average_slope_intercept(image,lines):
   if lines is None:
         return lane_lines
 
-
   for line in lines:
-    #x1,y1,x2,y2 = line.reshape(4)
     for x1, y1, x2, y2 in line:
       if x1 == x2:
         continue
@@ -226,41 +156,10 @@ class camera_1:
     line_image = display_lines(lane_image,averaged_lines)
 
     combo_image = cv2.addWeighted(lane_image,0.8,line_image,1,1)
-    steeringangle = compute_steering_angle(combo_image,averaged_lines)
     cv2.imshow("out",combo_image)
-    #cv2.imwrite("/home/michalis111/Pictures/combo4.jpg",combo_image)
     cv2.waitKey(3)
-"""
-    fig = plt.figure(figsize=(2, 3))
 
-    fig.add_subplot(2, 3, 1)
-    plt.imshow(cv2.cvtColor(lane_image, cv2.COLOR_BGR2RGB))
-    plt.title("Original")
-    fig.add_subplot(2, 3, 2)
-    plt.imshow(cv2.cvtColor(gray, cv2.COLOR_BGR2RGB))
-    plt.title("Greyscale")
-    fig.add_subplot(2, 3, 3)
-    plt.imshow(cv2.cvtColor(blur, cv2.COLOR_BGR2RGB))
-    plt.title("Gaussian Blur")
-    fig.add_subplot(2, 3, 4)
-    plt.imshow(cv2.cvtColor(canny, cv2.COLOR_BGR2RGB))
-    plt.title("Canny")
-    fig.add_subplot(2, 3, 5)
-    plt.imshow(cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB))
-    plt.title("Region of Interest")
-    fig.add_subplot(2, 3, 6)
-    plt.imshow(cv2.cvtColor(combo_image, cv2.COLOR_BGR2RGB))
-    plt.title("Hough Lines")
-    plt.show(3)
-"""
-    
-      
-    
-    #print(steeringangle)
-    
-   
-
-
+ 
  
 
 if __name__ == '__main__':
