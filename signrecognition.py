@@ -122,11 +122,6 @@ class camera_1:
       #print("Predicted traffic sign is: ", classes[index])
       #cv2.putText(sign_image,str(index)+" "+classes[index], (120, 35), font, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
       #cv2.putText(sign_image, str(round(probabilityValue*100,2) )+"%", (180, 75), font, 0.75, (0, 0, 255), 2, cv2.LINE_AA)
-      #plt.imshow(cv2.cvtColor(cropped_image, cv2.COLOR_BGR2RGB))
-      #plt.title(classes[index])
-      #plt.grid()
-      #plt.axis('off')
-      #plt.show()
       #cv2.imshow("Result", sign_image)
       #cv2.waitKey(3)
       msg = classes[index]
